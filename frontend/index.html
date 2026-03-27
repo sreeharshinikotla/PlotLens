@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlotLens - AI-Powered eBook Reader</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- epub.js library via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/epubjs@0.3.88/dist/epub.min.js"></script>
+    <!-- jszip for unzipping epubs (required dependency) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>📖 PlotLens</h1>
+            <p class="tagline">Spoiler-Free Character Insights Powered by AI</p>
+        </header>
+
+        <!-- Upload Section -->
+        <section class="upload-section" id="uploadSection">
+            <div class="upload-box">
+                <h2>Upload Your eBook</h2>
+                <input 
+                    type="file" 
+                    id="epubInput" 
+                    accept=".epub" 
+                    class="file-input"
+                >
+                <label for="epubInput" class="upload-button">
+                    Choose .epub File
+                </label>
+                <p class="upload-hint">Select a DRM-free eBook file to begin reading</p>
+            </div>
+        </section>
+
+        <!-- Reader Section (hidden until book is loaded) -->
+        <section class="reader-section" id="readerSection" style="display: none;">
+            <!-- Book Info -->
+            <div class="book-info">
+                <h2 id="bookTitle">Loading...</h2>
+                <p id="bookAuthor"></p>
+            </div>
+
+            <!-- Reader Container -->
+            <div class="reader-container">
+                <div id="viewer" class="viewer"></div>
+            </div>
+
+            <!-- Navigation Controls -->
+            <div class="controls">
+                <button id="prevBtn" class="btn btn-nav">← Previous</button>
+                <span id="locationDisplay" class="location-display">Page 0 / 0</span>
+                <button id="nextBtn" class="btn btn-nav">Next →</button>
+            </div>
+
+            <!-- Upload Another Book -->
+            <div class="upload-another">
+                <button id="uploadAnotherBtn" class="btn btn-secondary">Upload Another Book</button>
+            </div>
+        </section>
+    </div>
+
+    <!-- Summary Popup Modal -->
+    <div id="summaryModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span id="closeModal" class="close">&times;</span>
+            <div id="modalBody">
+                <div class="spinner"></div>
+                <p>Loading character insights...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
