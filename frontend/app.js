@@ -142,17 +142,32 @@ document.addEventListener('DOMContentLoaded', () => {
 // Text Selection Handler 
 function handleTextSelection() {
     const selectedText = window.getSelection().toString().trim();
-
     if (!selectedText || selectedText.length === 0) return;
 
+    // Try to get the CFI of the selection using epub.js
+    let cfi = null;
+    if (rendition && rendition.getRange) {
+        // epub.js renders in an iframe, so get the selection from there
+        const iframe = document.querySelector('#viewer iframe');
+        if (iframe && iframe.contentWindow) {
+            const iframeSelection = iframe.contentWindow.getSelection();
+            if (iframeSelection && iframeSelection.rangeCount > 0) {
+                const range = iframeSelection.getRangeAt(0);
+                try {
+                    cfi = rendition.locationFromRange(range);
+                } catch (e) {
+                    cfi = null;
+                }
+            }
+        }
+    }
+
     console.log(' Text selected:', selectedText);
-    console.log(' Current location:', currentLocation);
+    console.log(' Selection CFI:', cfi);
+    console.log(' Current page location:', currentLocation);
 
-    // For now, just log the selection
-    // In Phase 5, we'll send this to the backend for summarization
-    console.log(' In Phase 2.6, we\'ll get the exact position and prepare for AI summary');
+    // In Phase 5, send selectedText and cfi to backend for summary
 }
-
 // Modal Functions
 function openModal(title, content) {
     const modal = document.getElementById('summaryModal');
