@@ -140,14 +140,13 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Text Selection Handler 
-function handleTextSelection() {
+async function handleTextSelection() {
     const selectedText = window.getSelection().toString().trim();
     if (!selectedText || selectedText.length === 0) return;
 
     // Try to get the CFI of the selection using epub.js
     let cfi = null;
     if (rendition && rendition.getRange) {
-        // epub.js renders in an iframe, so get the selection from there
         const iframe = document.querySelector('#viewer iframe');
         if (iframe && iframe.contentWindow) {
             const iframeSelection = iframe.contentWindow.getSelection();
@@ -162,11 +161,27 @@ function handleTextSelection() {
         }
     }
 
-    console.log(' Text selected:', selectedText);
-    console.log(' Selection CFI:', cfi);
-    console.log(' Current page location:', currentLocation);
+    // Show loading modal
+    openModal(`Summary for: ${selectedText}`, `<div class='spinner'></div><p>Loading character insights...</p>`);
 
-    // In Phase 5, send selectedText and cfi to backend for summary
+    // Send to backend
+    try {
+        const response = await fetch(`${API_BASE_URL}/summarize`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                character_name: selectedText,
+                current_location: cfi || (currentLocation && currentLocation.start && currentLocation.start.cfi) || '',
+            }),
+        });
+        const data = await response.json();
+        openModal(`Summary for: ${selectedText}`, `<p>${data.summary}</p>`);
+    } catch (error) {
+        openModal('Error', 'Failed to fetch summary from backend.');
+        console.error('Error fetching summary:', error);
+    }
 }
 // Modal Functions
 function openModal(title, content) {
