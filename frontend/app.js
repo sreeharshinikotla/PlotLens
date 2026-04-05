@@ -81,14 +81,14 @@ async function loadBook(arrayBuffer, fileName) {
 function setupEventListeners() {
     // Navigation buttons
     document.getElementById('prevBtn').addEventListener('click', () => {
-        if (rendition && rendition.prevPage) {
-            rendition.prevPage().then(() => updateLocation());
+        if (rendition && rendition.prev) {
+            rendition.prev().then(() => updateLocation());
         }
     });
 
     document.getElementById('nextBtn').addEventListener('click', () => {
-        if (rendition && rendition.nextPage) {
-            rendition.nextPage().then(() => updateLocation());
+        if (rendition && rendition.next) {
+            rendition.next().then(() => updateLocation());
         }
     });
 
