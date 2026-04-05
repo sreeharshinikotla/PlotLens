@@ -104,9 +104,15 @@ function setupEventListeners() {
         }
     });
 
-    // Text selection / highlighting in the book viewer
-    const viewerElement = document.getElementById('viewer');
-    viewerElement.addEventListener('mouseup', handleTextSelection);
+    // Attach selection handler to iframe after rendering
+    if (rendition) {
+        rendition.on('rendered', () => {
+            const iframe = document.querySelector('#viewer iframe');
+            if (iframe && iframe.contentDocument) {
+                iframe.contentDocument.addEventListener('mouseup', handleTextSelection);
+            }
+        });
+    }
 }
 
 // Location & Navigation
